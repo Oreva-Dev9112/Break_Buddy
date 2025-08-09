@@ -1,7 +1,13 @@
 /**
- * By default, Remix will handle generating the HTTP Response for you.
- * You are free to delete this file if you'd like to, but if you ever want it revealed again, you can run `npx remix reveal` ✨
- * For more information, see https://remix.run/file-conventions/entry.server
+ * Server entry
+ *
+ * Streams HTML to the client. Robots (search engine crawlers) get the fully
+ * rendered shell via onAllReady; browsers get onShellReady for fast TTFB.
+ *
+ * Team notes:
+ * - Add request-scoped context via the `loadContext` param if we need
+ *   environment config, feature flags, or logging per request.
+ * - Be careful with logging here; this runs on every request.
  */
 
 import { PassThrough } from "node:stream";
