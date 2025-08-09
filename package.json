@@ -11,10 +11,14 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.14.3",
     "@remix-run/node": "^2.16.8",
     "@remix-run/react": "^2.16.8",
     "@remix-run/serve": "^2.16.8",
+    "@supabase/supabase-js": "^2.52.1",
+    "framer-motion": "^12.23.11",
     "isbot": "^4.1.0",
+    "lottie-react": "^2.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
