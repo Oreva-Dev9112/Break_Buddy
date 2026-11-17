@@ -1,5 +1,5 @@
 {
-  "name": "cbre",
+  "name": "break-buddy",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -15,7 +15,6 @@
     "@remix-run/node": "^2.16.8",
     "@remix-run/react": "^2.16.8",
     "@remix-run/serve": "^2.16.8",
-    "@supabase/supabase-js": "^2.52.1",
     "framer-motion": "^12.23.11",
     "isbot": "^4.1.0",
     "lottie-react": "^2.4.1",
@@ -43,5 +42,7 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "description": "Plan meaningful breaks. Runs entirely in the browser \u2014 no account, no server.",
+  "license": "MIT"
 }
