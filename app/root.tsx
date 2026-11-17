@@ -3,7 +3,7 @@
  *
  * - Provides the HTML document structure for every route
  * - Registers global <Links> (fonts, styles) and <Meta>
- * - Wraps the entire app with <AuthProvider> so any route can call useAuth()
+ * - Wraps the entire app with <ProfileProvider> so any route can call useProfile()
  * - Renders the active route via <Outlet />
  *
  * Team notes:
@@ -19,7 +19,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import { AuthProvider } from "~/contexts/AuthContext";
+import { ProfileProvider } from "~/contexts/ProfileContext";
 
 import "./tailwind.css";
 
@@ -52,9 +52,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
          * Global context for authentication and user profile.
          * Any route/component can call useAuth() without prop drilling.
          */}
-        <AuthProvider>
+        <ProfileProvider>
           {children}
-        </AuthProvider>
+        </ProfileProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

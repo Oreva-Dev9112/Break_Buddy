@@ -2,16 +2,15 @@
  * Authenticated dashboard
  *
  * Presents a high-level overview: KPIs, recent activity, tasks, and a calendar.
- * Redirects unauthenticated users back to the landing page.
+ * Sends anyone without a local profile back to the landing page.
  *
  * Team notes:
- * - Data is mocked for now (e.g., KPIs). Wire up real endpoints incrementally.
- * - Trip plans are fetched from Supabase; extend with filters/pagination later.
+ * - Some panels are still placeholder numbers (e.g., KPIs).
+ * - Break plans come from the local store; there is no server to call.
  */
 import { useEffect, useState } from "react";
 import { useNavigate } from "@remix-run/react";
-import { useAuth } from "~/contexts/AuthContext";
-import { dbHelpers } from "~/lib/supabase";
+import { useProfile } from "~/contexts/ProfileContext";
 import Sidebar from "~/components/Sidebar";
 import TopBar from "~/components/TopBar";
 import HeroBanner from "~/components/HeroBanner";
@@ -22,44 +21,23 @@ import KpiCard from "~/components/KpiCard";
 import { motion } from "framer-motion";
 
 export default function Dashboard() {
-  const { user, userProfile, loading } = useAuth();
+  const { profile, breakPlans, ready } = useProfile();
   const navigate = useNavigate();
 
-  const [tripPlans, setTripPlans] = useState<Array<Record<string, unknown>>>([]);
-  // const [tripsLoading, setTripsLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Load user's upcoming trips
+  // No local profile yet: send them back to set one up.
   useEffect(() => {
-    const loadTrips = async () => {
-      if (!user) return;
-      // setTripsLoading(true);
-      const { data, error } = await dbHelpers.getTripPlans(user.id);
-      if (!error) setTripPlans(data || []);
-      // setTripsLoading(false);
-    };
-    if (user) loadTrips();
-  }, [user]);
-
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!loading && !user) {
+    if (ready && !profile) {
       navigate("/");
     }
-  }, [user, loading, navigate]);
-
-  // const handleSignOut = async () => {
-  //   const { error } = await signOut();
-  //   if (!error) {
-  //     navigate("/");
-  //   }
-  // };
+  }, [profile, ready, navigate]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  if (loading) {
+  if (!ready) {
     return (
       <div className="min-h-screen flex items-center justify-center"
         style={{
@@ -77,11 +55,11 @@ export default function Dashboard() {
     );
   }
 
-  if (!user) {
+  if (!profile) {
     return null;
   }
 
-  const userName = userProfile?.full_name || user.email?.split('@')[0] || "User";
+  const userName = profile.full_name;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -193,8 +171,8 @@ export default function Dashboard() {
                     whileHover={{ x: 5 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <span className="text-purple-200">Trips Planned</span>
-                    <span className="text-white font-medium">{tripPlans.length}</span>
+                    <span className="text-purple-200">Breaks Planned</span>
+                    <span className="text-white font-medium">{breakPlans.length}</span>
                   </motion.div>
                   <motion.div 
                     className="flex justify-between"
@@ -202,7 +180,7 @@ export default function Dashboard() {
                     transition={{ duration: 0.2 }}
                   >
                     <span className="text-purple-200">Work Days</span>
-                    <span className="text-white font-medium">{userProfile?.work_days_count || 0}</span>
+                    <span className="text-white font-medium">{profile.work_days_count}</span>
                   </motion.div>
                   <motion.div 
                     className="flex justify-between"
@@ -210,7 +188,7 @@ export default function Dashboard() {
                     transition={{ duration: 0.2 }}
                   >
                     <span className="text-purple-200">Account Type</span>
-                    <span className="text-white font-medium capitalize">{userProfile?.user_type || 'individual'}</span>
+                    <span className="text-white font-medium capitalize">{profile.user_type}</span>
                   </motion.div>
                 </div>
                 <motion.button 

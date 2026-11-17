@@ -14,7 +14,7 @@ Break Buddy is built for people who want intentional, restorative breaks. Whethe
 ## 🛠️ Tech Stack
 - **App framework:** Remix (Vite) + React 18 + TypeScript
 - **Styling:** Tailwind CSS
-- **Auth & DB:** Supabase (Auth + Postgres)
+- **Storage:** the browser's `localStorage` — no backend, no accounts
 - **Animations:** Framer Motion, Lottie
 
 ## ⚙️ Requirements
@@ -36,17 +36,16 @@ npm run dev
 # http://localhost:5173
 ```
 
-## 🔑 Environment & Supabase
-Today, the Supabase URL and anon key are defined in `app/lib/supabase.ts` for ease of local development.
+## 🔑 Environment
+There isn't any. Break Buddy needs no API keys, no database and no `.env` file.
 
-For production, move these to environment variables and read them in your client/server as appropriate (e.g., `import.meta.env.VITE_SUPABASE_URL`). Example `.env`:
+Everything lives on the device: your profile and your break plans are written to
+`localStorage` by `app/lib/store.ts`, and nothing is sent to a server. There are
+no accounts, so the app never holds anyone's email address.
 
-```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-Then update `app/lib/supabase.ts` to read from `import.meta.env`.
+This replaces an earlier Supabase backend, which has been retired. If shared
+team plans are added later, that is the point to introduce a server — see the
+roadmap.
 
 ## 🧪 Useful scripts
 ```bash
